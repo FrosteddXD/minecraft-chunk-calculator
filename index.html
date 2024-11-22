@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Chunk Border Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Press Start 2P', Arial, sans-serif;
+            background: linear-gradient(to bottom, #3C763D, #2E4E24);
+            color: #F3F3F3;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #2E4E24;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #8ABB3A;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            flex: 1;
+            text-align: left;
+        }
+        input[type="number"], input[type="text"] {
+            width: 60%;
+            padding: 12px;
+            border: 3px solid #8ABB3A;
+            border-radius: 4px;
+            background: #1E3E1E;
+            color: #F3F3F3;
+            font-size: 16px;
+            font-family: 'Press Start 2P', sans-serif; /* Apply Minecraft font to textboxes */
+            font-weight: normal; /* Ensure non-bold text */
+        }
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            background: #8ABB3A;
+            color: #F3F3F3;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Press Start 2P', sans-serif; /* Minecraft font on button */
+            font-weight: normal; /* Ensure non-bold text */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #A6D54B;
+            transform: translateY(-2px);
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 3px solid #8ABB3A;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background: #3C763D;
+            color: #F3F3F3;
+        }
+        td input {
+            text-align: center;
+            width: 100%;
+            border: none;
+            background: #2E4E24;
+            color: #F3F3F3;
+        }
+        td input:focus {
+            outline: none;
+            background: #3E8540;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 10px; /* Smaller font size for credit text */
+            color: #F3F3F3;
+            text-align: center;
+        }
+        footer a {
+            color: #8ABB3A;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Minecraft Bedrock Chunk Border Calculator</h1>
+        <form id="chunkForm">
+            <div class="form-group">
+                <label for="xCoord">Player X Coordinate:</label>
+                <input type="number" id="xCoord" placeholder="Enter X coordinate" required>
+            </div>
+            <div class="form-group">
+                <label for="zCoord">Player Z Coordinate:</label>
+                <input type="number" id="zCoord" placeholder="Enter Z coordinate" required>
+            </div>
+            <button type="submit">Calculate</button>
+        </form>
+        <div id="output">
+            <h2>Chunk Information</h2>
+            <table id="chunkTable">
+                <thead>
+                    <tr>
+                        <th>Border</th>
+                        <th>X Coordinate</th>
+                        <th>Z Coordinate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>North</td>
+                        <td><input type="text" id="northX" readonly></td>
+                        <td><input type="text" id="northZ" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>South</td>
+                        <td><input type="text" id="southX" readonly></td>
+                        <td><input type="text" id="southZ" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>West</td>
+                        <td><input type="text" id="westX" readonly></td>
+                        <td><input type="text" id="westZ" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>East</td>
+                        <td><input type="text" id="eastX" readonly></td>
+                        <td><input type="text" id="eastZ" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Center</td>
+                        <td><input type="text" id="centerX" readonly></td>
+                        <td><input type="text" id="centerZ" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer>
+        <p>This Website/Tool is Developed and Owned by <a href="https://frosteddxd.carrd.co/" target="_blank">FrosteddXD</a></p>
+    </footer>
+    <script>
+        document.getElementById("chunkForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Get user input
+            const xCoord = parseInt(document.getElementById("xCoord").value);
+            const zCoord = parseInt(document.getElementById("zCoord").value);
+
+            // Calculate chunk coordinates
+            const chunkX = Math.floor(xCoord / 16);
+            const chunkZ = Math.floor(zCoord / 16);
+
+            // Calculate chunk borders
+            const startX = chunkX * 16;
+            const endX = startX + 15;
+            const startZ = chunkZ * 16;
+            const endZ = startZ + 15;
+
+            // Calculate center of the chunk
+            const centerX = startX + 8;
+            const centerZ = startZ + 8;
+
+            // Update table values
+            document.getElementById("northX").value = startX;
+            document.getElementById("northZ").value = startZ;
+
+            document.getElementById("southX").value = startX;
+            document.getElementById("southZ").value = endZ;
+
+            document.getElementById("westX").value = startX;
+            document.getElementById("westZ").value = startZ;
+
+            document.getElementById("eastX").value = endX;
+            document.getElementById("eastZ").value = startZ;
+
+            document.getElementById("centerX").value = centerX;
+            document.getElementById("centerZ").value = centerZ;
+        });
+    </script>
+</body>
+</html>
